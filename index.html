@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://unpkg.com/@gemwallet/api@2.2.0/umd/gemwallet-api.js"></script>
+    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ripple Forms</title>
+</head>
+<style>
+    .beautiful-button {
+      background-color: #4CAF50; /* Green */
+      background-image: linear-gradient(to bottom, #4CAF50, #008CBA);
+      border: none;
+      color: white;
+      margin-right: 10px;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    }
+    body {
+      background: rgb(2,0,36);
+      background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+      overflow: hidden;
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  </style>
+  <style>
+    .disabled-button {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    </style>
+  </head>
+  <body>
+    <style>
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+  
+      }
+      
+      .modal-content {
+        background-color: white;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 30%;
+        text-align: center;
+        font-family: 'Montserrat', sans-serif
+      }
+      </style>
+      
+      <div id="myModal" class="modal">
+        <div class="modal-content">
+          <p>Syncing order...</p>
+          <p> <b>Make sure you have switched to Devnet before connecting</b></p>
+        </div>
+      </div>
+<body>
+<h1 style="color: white; font-family: 'Montserrat', sans-serif; font-size: 50px; font-weight: bold; text-align: center; position: relative; top: 200px;">Ripple Forms Checkout Page</h1>
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+<button onclick="walletConnect()" id="Connect" class="beautiful-button disabled-button" disabled>Connect to Wallet</button>
+<button onclick="makePayment()" id="Send" class="beautiful-button">Make Payment</button>
+<p id="status" style="color: white; font-family: 'Montserrat', sans-serif; font-weight: bold; text-align: center; margin-top: 20px;">Disconnected</p>
+</div>
+<script>
+    window.onload = function() {
+      var modal = document.getElementById("myModal");
+      modal.style.display = "block";
+      var button = document.getElementById("Connect");
+      setTimeout(function() {
+        button.disabled = false;
+        button.classList.remove("disabled-button");
+        modal.style.display = "none";
+  
+      }, 5000); // 5000 milliseconds = 5 seconds
+    };
+    </script>
+<script>
+    $(document).ready(function() {
+    $('#status').bind('DOMSubtreeModified', function() {
+      if ($(this).html() === 'Tx Confirmed') {
+        $.ajax({
+        type: 'POST',
+        url: '/myroute',
+        data: {
+            row: k,
+            column: c,
+            sheet: ssid
+        },
+        success: function(response) {
+            console.log("Jo Mama");
+        },
+        error: function(xhr, status, error) {
+            console.log(error);
+        }
+        });
+    }
+    });
+});
+
+</script>
+<script>
+    var para = window.location.search
+    var urlPara = new URLSearchParams(para)
+    var ssid = urlPara.get('id')
+    var k = urlPara.get('r')
+    var walletAddr = urlPara.get('w')
+    var c = urlPara.get('c')
+    console.log(walletAddr)
+</script>
+<script>
+    var url = "https://docs.google.com/spreadsheets/d/"
+    var query = "/gviz/tq?"
+
+    var endpoint = `${url}${ssid}${query}`
+    console.log(endpoint)
+    var sum = 0
+    function JoMama(){
+    fetch(endpoint)
+    .then(res => res.text())
+    .then(data => {
+    var temp = JSON.parse(data.substring(47).slice(0,-2))
+    var rows = temp.table.rows
+    var xrpArr = []
+    var amountArr = []
+    var amount
+    const pattern = /\d+(\.\d+)?/g
+    rows[k].c.forEach((cell)=>{
+        xrpArr.push(cell)
+    })
+    console.log(xrpArr)
+    xrpArr.forEach((eachCell) =>{
+        if(eachCell.v.includes("XRP")){
+            amount = eachCell.v.match(pattern)
+            amountArr.push(parseInt(amount[0],10))
+        }
+    })
+    amountArr.forEach((x) => {
+        return sum +=x
+    })
+    })
+    console.log(sum)
+    return sum
+    }
+</script>
+<script>
+    var sum = JoMama()
+    console.log(sum)
+    function walletConnect(){
+    GemWalletApi.isConnected().then((isConnected) => {
+        if (isConnected) {
+            console.log("Connected");
+            console.log(sum)
+            document.getElementById('status').innerHTML = 'Connected'
+            GemWalletApi.getAddress().then((address) => {
+            // console.log(`Your address: ${address}`);
+            GemWalletApi.getNetwork().then((network) => {
+            // console.log(`Your network: ${network}`);
+            GemWalletApi.getPublicKey().then(({ publicKey }) => {
+            // console.log(`Your public key: ${publicKey}`);
+                });
+            });
+        });
+        } else {
+        console.log("User doesn't have GemWallet!"); 
+      }
+     });
+    }
+    function makePayment(){
+    GemWalletApi.isConnected().then((isConnected) => {
+    if (isConnected) {
+        console.log(walletAddr)
+        const payment = {
+        amount: sum,
+        destination: walletAddr,
+        };
+        GemWalletApi.sendPayment(payment).then((trHash) => {
+        console.log("Transaction Hash: ", trHash);
+        if (trHash == null){
+            console.log("rejected")
+            document.getElementById('status').innerHTML = 'Tx failed'
+        }
+        if (trHash!==null){
+            document.getElementById('status').innerHTML = 'Tx Confirmed'
+        }
+        });
+    }
+    });
+    }
+</script>
+</body>
+</html>

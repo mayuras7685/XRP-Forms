@@ -11,6 +11,7 @@
 ## Test as a Customer
 
 **A customer is someone who fills out the form created by the merchant**
+Read on or watch [video](https://youtu.be/oNN7IMi4Ilc)
 
 1.  Fill the form in the [link](https://forms.gle/pEQc4voG2EZNXEBh7) (This form shows an example of how a lawyer can use Rippleforms to get bookings for a consultation call )
 2.  After filling and submitting the form you should see a "You can pay using the following link" with a link. Click on the link
@@ -48,7 +49,7 @@
 
 ### Checkout page
 
-Before we begin you need to setup the Google Sheets API and save the credentials somewhere safe
+Before we begin you need to setup the Google Sheets API and save the credentials somewhere safe ([Tutorial on how to setup API here](https://youtu.be/PFJNJQCU_lo))
 
 ```sh
 https://github.com/mayuras7685/XRP-Forms.git
